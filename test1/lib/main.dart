@@ -1,64 +1,7 @@
 
-class Song{
-  String title = "";
-  String artist = "";
-  Duration duration = Duration(seconds: 0);
-  int year = 0;
-  }
-
-
-class Playlist with SearchMixin {
-  final List<Song> songs = [];
-
-  Playlist(List<Song> songs) {
-    this.songs.addAll(songs);
-  }
-
-  // Пошук пісень у плейлисті
-  List<Song> search(String query) {
-    return songs.where((song) => song.title.contains(query)).toList();
-    songs.where((song) => song.artist.contains(query)).toList();
-  }
-}
-
-mixin SearchMixin
-  /*String title = "";
-  String artist = "";
-  Duration duration = Duration(seconds: 0);
-  int year = 0;
-
-  @override
-  bool matches(String query) {
-    return title.contains(query) || age == int.parse(query);
-  }*/
-
-void main() {
-  Song song1 = Song(
-    title: "Song1",
-    artist: "Artist1"
-    duration: Duration(minutes: 1, seconds: 15)
-    year: 2023
-  )
-}
-
-
-
-Playlist playlist = Playlist([
-  Song(title: "Song1", artist: "Artist1"),
-  Song(title: "Song2", artist: "Artist2"),
-
-]);
-
-List<Song> results = playlist.search("Song1");
-
-for (Song result in results) {
-  print(result.title);
-}
-
-
-/*
+//Створюю міксін
 mixin SearchMixin {
-  final List<Song> songs = [];
+  List<Song> songs = [];
 
   List<Song> search(String query) {
     return songs.where((song) {
@@ -68,12 +11,14 @@ mixin SearchMixin {
   }
 }
 
+//Створюю клас Сонг
 class Song {
   final String title;
   final String artist;
   final Duration duration;
   final int year;
 
+//Конструктор класу сонг
   Song({
     required this.title,
     required this.artist,
@@ -82,14 +27,17 @@ class Song {
   });
 }
 
+//Створюю клас Плейліст
 class Playlist with SearchMixin {
-  final List<Song> songs = [];
+  final String name;
 
-  Playlist(List<Song> songs) {
-    this.songs.addAll(songs);
+  Playlist({
+    required this.name,
+    List<Song> songs = const [],
+  }) {
+    this.songs = songs;
   }
 
-  // Пошук пісень у плейлисті
   List<Song> search(String query) {
     return songs.where((song) {
       return song.title.toLowerCase().contains(query.toLowerCase()) ||
@@ -98,30 +46,58 @@ class Playlist with SearchMixin {
   }
 }
 
-void main() {
-  // Створити список пісень
-  List<Song> songs = [
-    Song(title: "Song1", artist: "Artist1"),
-    Song(title: "Song2", artist: "Artist2"),
-    Song(title: "Song3", artist: "Artist3"),
-  ];
-
-  // Створити плейлист
-  Playlist playlist = Playlist(songs);
-
-  // Знайти пісні по назві
-  List<Song> results = playlist.search("Song1");
-
-  // Вивести результати пошуку
-  for (Song result in results) {
-    print(result.title);
-  }
-
-  // Знайти пісні по виконавцю
-  results = playlist.search("Artist2");
-
-  // Вивести результати пошуку
-  for (Song result in results) {
-    print(result.title);
+extension MyExtension on List<Song> {
+  Duration totalDuration() {
+    double totalSeconds = 0.0;
+    
+    for (var song in this) {
+      totalSeconds += song.duration.inSeconds;
+    }
+    return Duration(seconds: totalSeconds);
   }
 }
+
+
+void main() {
+  //Додаю пісні
+  List<Song> songs = [
+    Song(
+      title: "Song1",
+      artist: "Artist1",
+      duration: Duration(minutes: 2, seconds: 30),
+      year: 2000),
+    Song(
+      title: "Song2",
+      artist: "Artist1",
+      duration: Duration(minutes: 2, seconds: 40),
+      year: 2001),
+    Song(
+      title: "Song1",
+      artist: "Artist2",
+      duration: Duration(minutes: 2, seconds: 50),
+      year: 2002),
+    Song(
+      title: "Song2",
+      artist: "Artist2",
+      duration: Duration(minutes: 3, seconds: 0),
+      year: 2003),
+  ];
+
+//Створюю "Плейліст" класу Плейліст
+  Playlist playlist = Playlist(name: "Song List", songs: songs);
+
+//Здійснення пошуку за назвою та артистом
+  List<Song> results = playlist.search("Song1");
+  List<Song> results2 = playlist.search("Artist2");
+
+//Ну і вивід результатів
+  for (Song result in results) {
+    print(result.title);
+  }
+
+  for (Song result in results2) {
+    print(result.artist);
+  }
+}
+
+print(totalDuration);
