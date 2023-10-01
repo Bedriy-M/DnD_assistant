@@ -18,7 +18,7 @@ class Song {
   final Duration duration;
   final int year;
 
-//Конструктор класу сонг
+//Конструктор де описую обов'язкові поля
   Song({
     required this.title,
     required this.artist,
@@ -31,24 +31,19 @@ class Song {
 class Playlist with SearchMixin {
   final String name;
 
+//Конструктор класу, де описую, що він повинен містити
   Playlist({
     required this.name,
     List<Song> songs = const [],
   }) {
     this.songs = songs;
   }
-
-  List<Song> search(String query) {
-    return songs.where((song) {
-      return song.title.toLowerCase().contains(query.toLowerCase()) ||
-          song.artist.toLowerCase().contains(query.toLowerCase());
-    }).toList();
-  }
 }
 
+//Розширення класу Ліст, яке дає рахувати загальну тривалість
 extension MyExtension on List<Song> {
   Duration totalDuration() {
-    double totalSeconds = 0.0;
+    int totalSeconds = 0;
     
     for (var song in this) {
       totalSeconds += song.duration.inSeconds;
@@ -57,9 +52,8 @@ extension MyExtension on List<Song> {
   }
 }
 
-
 void main() {
-  //Додаю пісні
+  //Додаю пісні з атрибутами
   List<Song> songs = [
     Song(
       title: "Song1",
@@ -86,7 +80,7 @@ void main() {
 //Створюю "Плейліст" класу Плейліст
   Playlist playlist = Playlist(name: "Song List", songs: songs);
 
-//Здійснення пошуку за назвою та артистом
+//Пошук за назвою та артистом
   List<Song> results = playlist.search("Song1");
   List<Song> results2 = playlist.search("Artist2");
 
@@ -98,6 +92,6 @@ void main() {
   for (Song result in results2) {
     print(result.artist);
   }
-}
 
-print(totalDuration);
+  print(playlist.songs.totalDuration());
+}
